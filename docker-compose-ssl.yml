@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  prodxcloud:
+    container_name: prodxcloud
+    image: prodxcloud:latest
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.prodxcloud.rule=Host(`54.165.83.187`)"
+      - "traefik.http.routers.prodxcloud.entrypoints=websecure"
+      - "traefik.http.routers.prodxcloud.tls.certresolver=myresolver"
+      - "traefik.http.services.prodxcloud.loadbalancer.server.port=3000"
+    ports:
+      - "3000:3000"
+    restart: always
+    networks:
+      - traefik_default
+networks:
+  traefik_default:
+    external: true
