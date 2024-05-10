@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prodxcloud-deployment
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: prodxcloud
+  template:
+    metadata:
+      labels:
+        app: prodxcloud
+    spec:
+      containers:
+      - name: prodxcloud
+        image: ennolan/prodxcloud:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+       
+# added load balancer ( optional Update with EC2 IP)
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prodxcloud
+spec:
+  externalIPs:
+    - 127.0.0.1
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+    nodePort: 80
+  selector:
+    app: prodxcloud
+  type: LoadBalancer
+status:
+  loadBalancer: {}       
